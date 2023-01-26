@@ -8,6 +8,46 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
+
+  let taskEntry=RetrieveTasks();
+
+
+  let plannerListEl=[];
+
+//   for (i=0;i<8;i++) {
+//     plannerListEl[i]=$("<div></div>");
+//     plannerListEl[i].attr("id","hour-"+(i+9));
+//     plannerListEl[i].addClass("row time-block future");
+//     $('.list-anchor').append(plannerListEl[i]);
+//     console.log("hi")
+    
+//   }
+//   $(".time-block").append("<div>HELLO</div>").addClass("col-2 col-md-1 hour text-center py-3");
+//   $(".time-block").append("<textarea></textarea>").addClass("col-8 col-md-10 description");
+//   $(".time-block").append("<button></button>").addClass("btn saveBtn col-2 col-md-1");
+//   $(".time-block").children("saveBtn").append("<i></i>").addClass("fas fa-save");
+//   console.log("the id is"+$(this).parent().attr("id"));
+//   // $(".time-block").children("div").innerHtml("TESTING"));
+//   // $(".time-block").append("<div>11AM</div>").addClass("col-2 col-md-1 hour text-center py-3");
+// console.log(plannerListEl);
+
+  $('.saveBtn').click(function() {
+    console.log("hi, parent.this is"+$(this).parent().children(".description").val());
+    taskEntry[$(this).parent().attr("id").replace("hour-","")]=$(this).parent().children(".description").val();
+    console.log("num"+taskEntry);
+    console.log("slicetest"+$(this).parent().attr("id").slice(-2));
+  });
+
+  function RetrieveTasks() {
+    let objTempTasks={};
+    objTempTasks=JSON.parse(localStorage.getItem("tadcos29-task-list"));
+    //If there are scores in local storage, retrieve them, otherwise return empty array.
+if (objTempTasks) {return objTempTasks;} else {return []}
+}
+
+function WriteTasks(objTempTasks) {
+  localStorage.setItem("tadcos29-task-list", JSON.stringify(objTempTasks));
+}
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
