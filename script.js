@@ -13,9 +13,9 @@ $(function () {
   let NUMBER_OF_HOURS=9; // *WARNING* Code will break if workday invalid, i.e. sum of
                           // STARTING_TIME and NUMBER_OF_HOURS exceeds 23.
 
-  let presentTime = dayjs().subtract(8,'hour'); 
+  // let presentTime = dayjs().subtract(8,'hour'); 
   // can uncomment for testing purposes at odd hours
-  // let presentTime = dayjs();
+  let presentTime = dayjs();
   console.log("present time is "+presentTime);
   let currentHour=presentTime.hour();
   console.log("present hour is "+currentHour);
