@@ -10,38 +10,50 @@ $(function () {
   // useful when saving the description in local storage?
 
   let STARTING_TIME=9; // In case other workday arrangements are to be considered.
-  let NUMBER_OF_HOURS=8; // *WARNING* Code will break if workday invalid, i.e. sum of
+  let NUMBER_OF_HOURS=9; // *WARNING* Code will break if workday invalid, i.e. sum of
                           // STARTING_TIME and NUMBER_OF_HOURS exceeds 23.
 
-  // let presentTime = dayjs().subtract(8,'hour'); 
+  let presentTime = dayjs().subtract(8,'hour'); 
   // can uncomment for testing purposes at odd hours
-  let presentTime = dayjs();
+  // let presentTime = dayjs();
   console.log("present time is "+presentTime);
   let currentHour=presentTime.hour();
   console.log("present hour is "+currentHour);
   // dayjs(presentTime).format("YYYY-MM-DD");
-  $("#currentDay").text(presentTime.format("dddd, D MMMM YYYY"));
+  
+  
+
+// CREATING TIME SLOTS AND POPULATING HOUR HEADERS WITH FORMATTED TIME
+
+  let plannerListEl=[];
+    for (i=0;i<NUMBER_OF_HOURS;i++) {
+      plannerListEl[i]=$("<div></div>");
+      plannerListEl[i].attr("id","hour-"+(i+STARTING_TIME));
+      plannerListEl[i].addClass("row time-block past");
+      plannerListEl[i].appendTo($('.list-anchor'));
+}
+  $("<div></div>").appendTo(".time-block");
+  $(".time-block").children("div").addClass("col-2 col-md-1 hour text-center py-3");
+  $("<textarea></textarea>").appendTo(".time-block");
+  $(".time-block").children("textarea").addClass("col-8 col-md-10 description");
+  $(".time-block").children("textarea").attr("rows",3);
+  $("<button></button>").appendTo(".time-block");
+  $(".time-block").children("button").addClass("btn saveBtn col-2 col-md-1");
+  $("<i></i>").appendTo(".saveBtn");
+  $(".time-block").children(".saveBtn").children("i").addClass("fas fa-save");
+
+let anchorChildren=$(".list-anchor").children();
+  for (i=0;i<NUMBER_OF_HOURS;i++) {
+  let headerDate = dayjs().hour(HourToArray(anchorChildren[i].id)+STARTING_TIME);
+headerDate=headerDate.format("ha");
+anchorChildren[i].children[0].innerHTML=headerDate;
+  }
+// END OF TIME SLOT CREATION
+
+$("#currentDay").text(presentTime.format("dddd, D MMMM YYYY"));
   let objTaskRecord=RetrieveTasks();
   StyleTime(presentTime);
   PopulateTasks();
-  
-
-  let plannerListEl=[];
- for (i=0;i<NUMBER_OF_HOURS;i++) {
-      plannerListEl[i]=$("<div></div>");
-      plannerListEl[i].attr("id","hour-"+(i+STARTING_TIME));
-      plannerListEl[i].addClass("row time-block future");
-      $('.list-anchor').append(plannerListEl[i]);
-    console.log("hi")
-}
-  $(".time-block").append("<div>HELLO</div>").addClass("col-2 col-md-1 hour text-center py-3");
-  $(".time-block").append("<textarea></textarea>").addClass("col-8 col-md-10 description");
-  $(".time-block").append("<button></button>").addClass("btn saveBtn col-2 col-md-1");
-//   $(".time-block").children("saveBtn").append("<i></i>").addClass("fas fa-save");
-//   console.log("the id is"+$(this).parent().attr("id"));
-//   // $(".time-block").children("div").innerHtml("TESTING"));
-//   // $(".time-block").append("<div>11AM</div>").addClass("col-2 col-md-1 hour text-center py-3");
-// console.log(plannerListEl);
 
   $('.saveBtn').click(function() {
     
