@@ -9,6 +9,17 @@ $(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
 
+  let STARTING_TIME=9; // In case other workday arrangements are to be considered.
+
+
+
+  let presentTime = dayjs();
+  // dayjs(presentTime).local();
+  console.log("present time is "+presentTime);
+  let currentHour=presentTime.hour();
+  console.log("present hour is "+currentHour);
+  // dayjs(presentTime).format("YYYY-MM-DD");
+  $("#currentDay").text(presentTime.format("dddd, D MMMM YYYY"));
   let taskEntry=RetrieveTasks();
 
 
@@ -32,10 +43,16 @@ $(function () {
 // console.log(plannerListEl);
 
   $('.saveBtn').click(function() {
+    
+    //while its parent is
+    let parentEl=$(this).parent();
+    //Determine the identity of the caller. The id string of the parent
+    //element is stripped of the 'hour-' string by a simple replace() with null.
+    //A parseInt converts the resulting string to a number.
+    let timeSlot=parseInt(parentEl.attr("id").replace("hour-",""))-9;
     console.log("hi, parent.this is"+$(this).parent().children(".description").val());
-    taskEntry[$(this).parent().attr("id").replace("hour-","")]=$(this).parent().children(".description").val();
-    console.log("num"+taskEntry);
-    console.log("slicetest"+$(this).parent().attr("id").slice(-2));
+    taskEntry[timeSlot]=$(this).parent().children(".description").val();
+    console.log("entry is now"+taskEntry+" ");
   });
 
   function RetrieveTasks() {
@@ -43,6 +60,13 @@ $(function () {
     objTempTasks=JSON.parse(localStorage.getItem("tadcos29-task-list"));
     //If there are scores in local storage, retrieve them, otherwise return empty array.
 if (objTempTasks) {return objTempTasks;} else {return []}
+}
+
+function HourToArray(stringId) {
+  // Just for peace of mind, this converts a container id ('hour-1, hour-2, etc.') to
+  // a correct ordinal position in the zero-indexed array. Returns integer.
+  let arraySlot=parseInt(stringId.replace("hour-",""))-STARTING_TIME;
+  return arraySlot
 }
 
 function WriteTasks(objTempTasks) {
@@ -60,4 +84,6 @@ function WriteTasks(objTempTasks) {
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
+
+  
 });
