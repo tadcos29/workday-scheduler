@@ -12,7 +12,7 @@ $(function () {
   let STARTING_TIME=9; // In case other workday arrangements are to be considered.
   let NUMBER_OF_HOURS=8;
 
-
+  // let presentTime = dayjs().subtract(8,'hour');
   let presentTime = dayjs();
   // dayjs(presentTime).local();
   console.log("present time is "+presentTime);
@@ -21,10 +21,10 @@ $(function () {
   // dayjs(presentTime).format("YYYY-MM-DD");
   $("#currentDay").text(presentTime.format("dddd, D MMMM YYYY"));
   let objTaskRecord=RetrieveTasks();
+  StyleTime(presentTime);
   PopulateTasks();
   
 
-let test= HourToArray("hour-15");
   let plannerListEl=[];
 
 //   for (i=0;i<8;i++) {
@@ -48,15 +48,50 @@ let test= HourToArray("hour-15");
     
     //while its parent is
     let parentEl=$(this).parent();
-    //Determine the identity of the caller. The id string of the parent
-    //element is stripped of the 'hour-' string by a simple replace() with null.
-    //A parseInt converts the resulting string to a number.
+    //Determine the identity of the caller's parent. Parse the parent's
+    //id to obtain the corresponding zero-indexed slot in the 
+    //objTaskRecord array.
     let timeSlot=HourToArray(parentEl.attr("id"));
-    console.log("hi, parent.this is"+parentEl.children(".description").val());
+    // Set the slot to the contents (val) of the caller's parent's sole 
+    //".description"-classed child, which is the textarea.
     objTaskRecord[timeSlot]=parentEl.children(".description").val();
-    console.log("entry is now"+objTaskRecord+" ");
+ // Write the updated task record to local storage.
     WriteTasks(objTaskRecord);
+
   });
+
+function StyleTime(givenTime) {
+
+  
+  let givenHour=parseInt(givenTime.format("H"));
+  // console.log ("the current hour is"+givenTime.format("H"))
+  $(".list-anchor").children(".time-block").each(
+    function() {
+     $(this).addClass(AdaptToTime((HourToArray($(this).attr("id"))+STARTING_TIME),givenHour));
+    
+    }
+  );
+  
+  //.addClass(AdaptToTime(,givenHour));
+
+  function AdaptToTime(slotH,givenH) {
+    switch (true) {
+      case ((givenH-slotH)>0): // time passed
+        return "past";
+      break;
+      case ((givenH-slotH)<0): // still time
+        return "future";
+      break;
+      case ((givenH-slotH)===0): // on the hour
+      return "present";
+      break;
+    }
+
+  }
+
+}
+
+// LOCAL STORAGE HANDLING FUNCTIONS
 
   function RetrieveTasks() {
     let objTempTasks={};
@@ -66,12 +101,18 @@ if (objTempTasks) {return objTempTasks;} else {return []}
 }
 
 function PopulateTasks() {
+  // Populate the description fields with the contents of the task record.
   for(x=0;x<objTaskRecord.length;x++)
   if (objTaskRecord[x]) {
   $(ArrayToHourId(x)).children(".description").val(objTaskRecord[x]);
   }
 }
 
+function WriteTasks(objTempTasks) {
+  localStorage.setItem("tadcos29-task-list", JSON.stringify(objTempTasks));
+}
+
+// UTILITY FUNCTIONS FOR CONVERTING BETWEEN HOUR-IDS AND ARRAY POSITIONS
 
 function HourToArray(stringId) {
   // Just for peace of mind, this converts a container id ('hour-1, hour-2, etc.') to
@@ -81,16 +122,12 @@ function HourToArray(stringId) {
   return arraySlot
 }
 function ArrayToHourId(indexInt) {
-  // Just for peace of mind, this converts a container id ('hour-1, hour-2, etc.') to
-  // a correct ordinal position in the zero-indexed array. Returns integer.
+  //The reverse of the preceding function, this will take an array position and
+  //convert it to the appropriately-formatted #hour-N id
   let hourID="#hour-".concat((indexInt+STARTING_TIME).toString());
-  // console.log("converted "+indexInt+" to "+hourID);
   return hourID;
 }
 
-function WriteTasks(objTempTasks) {
-  localStorage.setItem("tadcos29-task-list", JSON.stringify(objTempTasks));
-}
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
