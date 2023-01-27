@@ -10,7 +10,7 @@ $(function () {
   // useful when saving the description in local storage?
 
   let STARTING_TIME=9; // In case other workday arrangements are to be considered.
-
+  let NUMBER_OF_HOURS=8;
 
 
   let presentTime = dayjs();
@@ -20,9 +20,11 @@ $(function () {
   console.log("present hour is "+currentHour);
   // dayjs(presentTime).format("YYYY-MM-DD");
   $("#currentDay").text(presentTime.format("dddd, D MMMM YYYY"));
-  let taskEntry=RetrieveTasks();
+  let objTaskRecord=RetrieveTasks();
+  PopulateTasks();
+  
 
-
+let test= HourToArray("hour-15");
   let plannerListEl=[];
 
 //   for (i=0;i<8;i++) {
@@ -49,10 +51,11 @@ $(function () {
     //Determine the identity of the caller. The id string of the parent
     //element is stripped of the 'hour-' string by a simple replace() with null.
     //A parseInt converts the resulting string to a number.
-    let timeSlot=parseInt(parentEl.attr("id").replace("hour-",""))-9;
-    console.log("hi, parent.this is"+$(this).parent().children(".description").val());
-    taskEntry[timeSlot]=$(this).parent().children(".description").val();
-    console.log("entry is now"+taskEntry+" ");
+    let timeSlot=HourToArray(parentEl.attr("id"));
+    console.log("hi, parent.this is"+parentEl.children(".description").val());
+    objTaskRecord[timeSlot]=parentEl.children(".description").val();
+    console.log("entry is now"+objTaskRecord+" ");
+    WriteTasks(objTaskRecord);
   });
 
   function RetrieveTasks() {
@@ -62,11 +65,27 @@ $(function () {
 if (objTempTasks) {return objTempTasks;} else {return []}
 }
 
+function PopulateTasks() {
+  for(x=0;x<objTaskRecord.length;x++)
+  if (objTaskRecord[x]) {
+  $(ArrayToHourId(x)).children(".description").val(objTaskRecord[x]);
+  }
+}
+
+
 function HourToArray(stringId) {
   // Just for peace of mind, this converts a container id ('hour-1, hour-2, etc.') to
   // a correct ordinal position in the zero-indexed array. Returns integer.
   let arraySlot=parseInt(stringId.replace("hour-",""))-STARTING_TIME;
+  // console.log("converted "+stringId+" to "+arraySlot);
   return arraySlot
+}
+function ArrayToHourId(indexInt) {
+  // Just for peace of mind, this converts a container id ('hour-1, hour-2, etc.') to
+  // a correct ordinal position in the zero-indexed array. Returns integer.
+  let hourID="#hour-".concat((indexInt+STARTING_TIME).toString());
+  // console.log("converted "+indexInt+" to "+hourID);
+  return hourID;
 }
 
 function WriteTasks(objTempTasks) {
