@@ -1,99 +1,28 @@
-# 05 Third-Party APIs: Work Day Scheduler
+# Work Day Scheduler (Bootcamp Challenge 5)
 
-## Your Task
+## Introduction and Purpose:
 
-Create a simple calendar application that allows a user to save events for each hour of the day by modifying starter code. This app will run in the browser and feature dynamically updated HTML and CSS powered by jQuery.
+A rather rudimentary daily planner using the Day.js utility library. I used this exercise as an opportunity to practice DOM traversal using jQuery syntax, dynamic element creation via jQuery and Bootstrap, and manipulation of local storage.
 
-You'll need to use the [Day.js](https://day.js.org/en/) library to work with date and time. Be sure to read the documentation carefully and concentrate on using Day.js in the browser.
+## Scenario:
 
-## User Story
+## Technical Overview:
 
-```md
-AS AN employee with a busy schedule
-I WANT to add important events to a daily planner
-SO THAT I can manage my time effectively
-```
+Based on two constants - the start and duration of the workday - the script generates a variable set of hourly time slots appended to an HTML container by jQuery methods. Each time slot is equipped with a button which commits the contents of its (and only its) associated text area to local storage, where it persists between sessions.
 
-## Acceptance Criteria
+The application obtains the present date and hour via Day.js and dynamically styles the time slots according to whether they are in the past, present, or future relative to the current hour. 
 
-```md
-GIVEN I am using a daily planner to create a schedule
-WHEN I open the planner
-THEN the current day is displayed at the top of the calendar
-WHEN I scroll down
-THEN I am presented with timeblocks for standard business hours
-WHEN I view the timeblocks for that day
-THEN each timeblock is color coded to indicate whether it is in the past, present, or future
-WHEN I click into a timeblock
-THEN I can enter an event
-WHEN I click the save button for that timeblock
-THEN the text for that event is saved in local storage
-WHEN I refresh the page
-THEN the saved events persist
-```
+## Results:
 
-The following animation demonstrates the application functionality:
+![image](./WorkDayScheduler.gif)
 
-<!-- @TODO: create ticket to review/update image) -->
-![A user clicks on slots on the color-coded calendar and edits the events.](./Assets/05-third-party-apis-homework-demo.gif)
 
-## Grading Requirements
+The application is currently live on [GitHub Pages](https://tadcos29.github.io/workday-scheduler/) 
 
-> **Note**: If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count towards your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
+The GitHub repository for the project is: https://github.com/tadcos29/workday-scheduler
 
-This Challenge is graded based on the following criteria:
+## Potential Issues:
 
-### Technical Acceptance Criteria: 40%
+* There is some potential redundancy in the jQuery calls, mostly for the sake of increased readability.
 
-* Satisfies all of the above acceptance criteria plus the following:
-
-  * Uses a date utility library to work with date and time
-
-### Deployment: 32%
-
-* Application deployed at live URL
-
-* Application loads with no errors
-
-* Application GitHub URL submitted
-
-* GitHub repo contains application code
-
-### Application Quality: 15%
-
-* Application user experience is intuitive and easy to navigate
-
-* Application user interface style is clean and polished
-
-* Application resembles the mock-up functionality provided in the Challenge instructions
-
-### Repository Quality: 13%
-
-* Repository has a unique name
-
-* Repository follows best practices for file structure and naming conventions
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages
-
-* Repository contains quality README file with description, screenshot, and link to deployed application
-
-## Review
-
-You are required to submit the following for review:
-
-* The URL of the deployed application
-
-* The URL of the GitHub repository, with a unique name and a README describing the project
-
-- - -
-© 2022 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+* The file structure of this repository is questionable, lacking as it does the standard directory structure. I chose do to so to preserve the original flattened structure that came with the assignment.
