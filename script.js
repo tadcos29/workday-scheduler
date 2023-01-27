@@ -10,11 +10,12 @@ $(function () {
   // useful when saving the description in local storage?
 
   let STARTING_TIME=9; // In case other workday arrangements are to be considered.
-  let NUMBER_OF_HOURS=8;
+  let NUMBER_OF_HOURS=8; // *WARNING* Code will break if workday invalid, i.e. sum of
+                          // STARTING_TIME and NUMBER_OF_HOURS exceeds 23.
 
-  // let presentTime = dayjs().subtract(8,'hour');
+  // let presentTime = dayjs().subtract(8,'hour'); 
+  // can uncomment for testing purposes at odd hours
   let presentTime = dayjs();
-  // dayjs(presentTime).local();
   console.log("present time is "+presentTime);
   let currentHour=presentTime.hour();
   console.log("present hour is "+currentHour);
@@ -26,18 +27,16 @@ $(function () {
   
 
   let plannerListEl=[];
-
-//   for (i=0;i<8;i++) {
-//     plannerListEl[i]=$("<div></div>");
-//     plannerListEl[i].attr("id","hour-"+(i+9));
-//     plannerListEl[i].addClass("row time-block future");
-//     $('.list-anchor').append(plannerListEl[i]);
-//     console.log("hi")
-    
-//   }
-//   $(".time-block").append("<div>HELLO</div>").addClass("col-2 col-md-1 hour text-center py-3");
-//   $(".time-block").append("<textarea></textarea>").addClass("col-8 col-md-10 description");
-//   $(".time-block").append("<button></button>").addClass("btn saveBtn col-2 col-md-1");
+ for (i=0;i<NUMBER_OF_HOURS;i++) {
+      plannerListEl[i]=$("<div></div>");
+      plannerListEl[i].attr("id","hour-"+(i+STARTING_TIME));
+      plannerListEl[i].addClass("row time-block future");
+      $('.list-anchor').append(plannerListEl[i]);
+    console.log("hi")
+}
+  $(".time-block").append("<div>HELLO</div>").addClass("col-2 col-md-1 hour text-center py-3");
+  $(".time-block").append("<textarea></textarea>").addClass("col-8 col-md-10 description");
+  $(".time-block").append("<button></button>").addClass("btn saveBtn col-2 col-md-1");
 //   $(".time-block").children("saveBtn").append("<i></i>").addClass("fas fa-save");
 //   console.log("the id is"+$(this).parent().attr("id"));
 //   // $(".time-block").children("div").innerHtml("TESTING"));
